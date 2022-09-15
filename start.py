@@ -8,5 +8,3 @@ def myltiplys(x):
 myltiplys(5)
 
 # я ХОЧУ научиться коитить файлы
-
-#sssds 3sda
