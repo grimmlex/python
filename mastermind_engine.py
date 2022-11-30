@@ -1,9 +1,7 @@
 import random
 
-
 GUESS_NUMBER = int()
 _RESULT = {}
-
 
 def get_number():
     global GUESS_NUMBER
@@ -13,20 +11,18 @@ def get_number():
     GUESS_NUMBER = str(GUESS_NUMBER)
     return GUESS_NUMBER
 
-
-get_number()
-print(GUESS_NUMBER)
-
-
 def check_number(num):
-    if num == GUESS_NUMBER:
+    nums_bulls = 0
+    nums_cows = 0
+    print(num)
+    print(GUESS_NUMBER)
+    if int(num) == int(GUESS_NUMBER):
         print("Вы победили")
-    # bulls = 1
-    nums_bulls = ""
-    nums_cows = ""
+    for i in range(len(num)):
+        if num[i] == GUESS_NUMBER[i]:
+            nums_bulls += 1
+        for y in range(len(GUESS_NUMBER)):
+            if num[i] == GUESS_NUMBER[y]:
+                nums_cows += 1
     _RESULT = {'bulls': nums_bulls, 'cows': nums_cows}
     return _RESULT
-check_number(GUESS_NUMBER)
-
-
-
