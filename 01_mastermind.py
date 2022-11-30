@@ -42,3 +42,17 @@
 # Движок игры реализует только саму функциональность игры.
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
+
+from mastermind_engine import get_number, check_number, GUESS_NUMBER, _RESULT
+
+
+get_number()
+INPUT_NUMBER = ""
+
+
+while GUESS_NUMBER != INPUT_NUMBER:
+
+    INPUT_NUMBER = input("Введите чило 4-х значное ")
+    print(check_number(INPUT_NUMBER))
+
+
