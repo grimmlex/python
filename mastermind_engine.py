@@ -21,7 +21,7 @@ print(GUESS_NUMBER)
 def check_number(num):
     if num == GUESS_NUMBER:
         print("Вы победили")
-    bulls =
+    # bulls = 1
     nums_bulls = ""
     nums_cows = ""
     _RESULT = {'bulls': nums_bulls, 'cows': nums_cows}
