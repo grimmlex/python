@@ -1,7 +1,7 @@
 import random
 
 GUESS_NUMBER = int()
-_RESULT = {}
+_RESULT = {'bulls': 0, 'cows': 0}
 
 def get_number():
     global GUESS_NUMBER
@@ -13,15 +13,14 @@ def get_number():
 
 def check_number(num):
     global _RESULT
-    nums_bulls = 0
-    nums_cows = 0
-    if int(num) == int(GUESS_NUMBER):
-        print("Вы победили")
+    bulls = 0
+    cows = 0
     for i in range(len(num)):
         if num[i] == GUESS_NUMBER[i]:
-            nums_bulls += 1
+            bulls += 1
         for y in range(len(GUESS_NUMBER)):
             if num[i] == GUESS_NUMBER[y] and num[i] != GUESS_NUMBER[i]:
-                nums_cows += 1
-    _RESULT = {'bulls': nums_bulls, 'cows': nums_cows}
+                cows += 1
+    _RESULT['bulls'] = bulls
+    _RESULT['cows'] = cows
     return _RESULT
