@@ -47,18 +47,20 @@ from mastermind_engine import get_number, check_number, GUESS_NUMBER, _RESULT
 
 
 get_number()
-INPUT_NUMBER = ""
 count = 0
 
 while True:
-    INPUT_NUMBER = input("Введите чило 4-х значное ")
-    print(check_number(INPUT_NUMBER))
-    print(_RESULT['bulls'], type(_RESULT['bulls']))
-    count +=1
-    if _RESULT['bulls'] == 4:
-        print(f"Ура! Вы выйграли. Число загаданное - {INPUT_NUMBER}")
-        print(f"Вы справились с {count} попытки")
-        break
+    INPUT_NUMBER = input("Введите 4-х значное число ")
+    if len(INPUT_NUMBER)  != 4:
+        print("Неверный ввод")
+        INPUT_NUMBER = input("Введите число 4-х значное ")
+    else:
+        print(check_number(str(INPUT_NUMBER)))
+        count +=1
+        if _RESULT['bulls'] == 4:
+            print(f"Ура! Вы выйграли. Число загаданное - {INPUT_NUMBER}")
+            print(f"Вы справились с {count} попытки")
+            break
 
 
 
