@@ -14,7 +14,6 @@ sites = {
 
 distances = {}
 
-# TODO здесь заполнение словаря
 
 moscow = sites['Moscow']
 london = sites['London']
