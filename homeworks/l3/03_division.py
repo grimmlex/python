@@ -16,5 +16,4 @@ while a > b:
     result1 = b * int(result)
     result2 = a - result1
     a=0
-# TODO здесь ваш код
-print(result2)
+
