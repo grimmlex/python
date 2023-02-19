@@ -20,20 +20,25 @@
 #   print(Fire(), '+', Air(), '=', Fire() + Air())
 
 class Water:
-    count = 0
+    def __init__(self):
+        self.count = 0
+
+    def __str__(self):
+        return "Water"
 
     def __add__(self, other):
         if isinstance(other, Air):
             return Storm()
         elif isinstance(other, Fire):
             return Vapor()
-        elif isinstance(other, Earth):
+        elif isinstance(other, Earth) and self.count == 0:
+            self.count += 1
             return Dirt()
+        elif isinstance(other, Earth) and self.count == 1:
+            self.count += 1
+            return Swamp()
         elif isinstance(other, Lava):
             return Stone()
-
-    def __str__(self):
-        return "Water"
 
 
 class Air:
@@ -63,6 +68,9 @@ class Fire:
 
 
 class Earth:
+    def __int__(self):
+        self.count = 0
+
     def __str__(self):
         return "Earth"
 
@@ -114,16 +122,24 @@ class Stone:
         return "Stone"
 
 
+class Swamp:
+    def __str__(self):
+        return "Swamp"
+
+
 water = Water()
 lava = Lava()
+earth = Earth()
 
 # print(Fire(), '+', Air(), '=', Fire() + Air())
 # print(Fire(), '+', Air(), '=', Fire() + Air())
 # print(Water(), '+', Earth(), '=', Water() + Earth())
 # print(Water, '+', Lava, '=', Water + Lava)
-print(water + lava)
+
 # print(Water(), '+', Dust(), '=', Water() + Dust())
 
+print(water + earth)
+print(water + earth)
 
 # Усложненное задание (делать по желанию)
 # Добавить еще элемент в игру.
