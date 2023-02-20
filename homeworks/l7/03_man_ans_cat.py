@@ -29,7 +29,7 @@
 
 # (Можно определить критическое количество котов, которое может прокормить человек...)
 from termcolor import cprint
-from random import randint
+from random import randint, choice
 
 
 # Реализуем модель человека.
@@ -97,17 +97,27 @@ class Man:
             self.eat()
         else:
             self.watch_MTV()
+    def get_cat(self):
+        for cat in cats:
+            if cat.name == self.house.cat:
+                return
 
+            self.house.cat = cat.name
+            cat.house = self.house
+            print(f"{self.name} завёл кота {self.house.cat}")
 
 class House:
 
     def __init__(self):
         self.food = 50
         self.money = 0
+        self.cat = 0
+        self.cat_bowl = 0
+        self.cat_dirt = 0
 
     def __str__(self):
-        return 'В доме еды осталось {}, денег осталось {}'.format(
-            self.food, self.money)
+        return 'В доме еды осталось {}, денег осталось {}, грязно {}, в кошачьей миске осталось {}'.format(
+            self.food, self.money, self.cat_dirt, self.cat_bowl)
 
 
 class Cat:
@@ -115,6 +125,10 @@ class Cat:
         self.name = name
         self.fullness = 10
         self.house = None
+
+    def __str__(self):
+        return 'Я - кот {}, сытость {}'.format(
+            self.name, self.fullness)
 
 
 citizens = [
@@ -131,16 +145,15 @@ my_sweet_home = House()
 for citisen in citizens:
     citisen.go_to_the_house(house=my_sweet_home)
 
+citizens[randint(0, len(citizens))].get_cat()
 
-for day in range(1, 366):
+for day in range(1, 2):
     print('================ день {} =================='.format(day))
     for citisen in citizens:
         citisen.act()
     print('--- в конце дня ---')
     for citisen in citizens:
         print(citisen)
+    for cat in cats:
+        print(cat)
     print(my_sweet_home)
-
-# Создадим двух людей, живущих в одном доме - Бивиса и Батхеда
-# Нужен класс Дом, в нем должн быть холодильник с едой и тумбочка с деньгами
-# Еда пусть хранится в холодильнике в доме, а деньги - в тумбочке.
