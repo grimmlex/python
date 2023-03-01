@@ -29,7 +29,7 @@
 
 # (Можно определить критическое количество котов, которое может прокормить человек...)
 from termcolor import cprint
-from random import randint, choice
+from random import randint
 
 
 # Реализуем модель человека.
@@ -60,7 +60,7 @@ class Man:
 
     def work(self):
         cprint('{} сходил на работу'.format(self.name), color='blue')
-        self.house.money += 50
+        self.house.money += 150
         self.fullness -= 10
 
     def watch_MTV(self):
@@ -80,6 +80,21 @@ class Man:
         self.fullness -= 10
         cprint('{} Вьехал в дом'.format(self.name), color='cyan')
 
+    def get_cat_food(self):
+        if self.house.money >= 50:
+            cprint('{} сходил в магазин за едой для кота'.format(self.name), color='magenta')
+            self.house.money -= 50
+            self.house.cat_bowl += 50
+        else:
+            cprint('{} деньги кончились!'.format(self.name), color='red')
+
+    def clean_house(self):
+        if self.fullness > 20:
+            self.house.cat_dirt -= 100
+            self.fullness -= 20
+        else:
+            cprint('{} Устал!'.format(self.name), color='red')
+
     def act(self):
         if self.fullness <= 0:
             cprint('{} умер...'.format(self.name), color='red')
@@ -91,12 +106,17 @@ class Man:
             self.shopping()
         elif self.house.money < 50:
             self.work()
+        elif self.house.cat_bowl < 50:
+            self.get_cat_food()
+        elif self.house.cat_dirt >= 100:
+            self.clean_house()
         elif dice == 1:
             self.work()
         elif dice == 2:
             self.eat()
         else:
             self.watch_MTV()
+
     def get_cat(self):
         for cat in cats:
             if cat.name == self.house.cat:
@@ -142,18 +162,19 @@ cats = [
 ]
 
 my_sweet_home = House()
-for citisen in citizens:
-    citisen.go_to_the_house(house=my_sweet_home)
 
-citizens[randint(0, len(citizens))].get_cat()
+for citizen in citizens:
+    citizen.go_to_the_house(house=my_sweet_home)
 
-for day in range(1, 2):
+citizens[randint(0, len(citizens))-1].get_cat()
+
+for day in range(1, 17):
     print('================ день {} =================='.format(day))
-    for citisen in citizens:
-        citisen.act()
+    for citizen in citizens:
+        citizen.act()
     print('--- в конце дня ---')
-    for citisen in citizens:
-        print(citisen)
+    for citizen in citizens:
+        print(citizen)
     for cat in cats:
         print(cat)
     print(my_sweet_home)
