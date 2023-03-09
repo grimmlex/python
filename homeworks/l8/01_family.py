@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from termcolor import cprint
+from colorama import init, Fore, Back, Style
 from random import randint
+
+from termcolor import cprint
 
 ######################################################## Часть первая
 #
@@ -42,62 +44,83 @@ from random import randint
 # Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
 
 
+init(autoreset=True)
+
+
 class House:
 
     def __init__(self):
-        pass
+        self.money = 100
+        self.food = 100
+        self.dirt = 0
+
+    def __str__(self):
+        return f'В доме: денег - {self.money}, еды в холодильнике - {self.food}, грязи - {self.dirt}'
 
 
-class Husband:
-
+class Human:
     def __init__(self):
-        pass
+        self.fullness = 30
+        self.happiness = 100
+        self.house = None
+        self.name = None
+
+    def __str__(self):
+        return f'Я {self.name} - моя сытость {self.fullness}, моё счастье {self.happiness}'
+
+
+class Husband(Human):
+    def __init__(self, name):
+        super().__init__()
+        self.name = name
 
     def __str__(self):
         return super().__str__()
 
     def act(self):
-        pass
+        self.fullness -= 10
 
     def eat(self):
-        pass
+        self.fullness += 30
+        self.house.food -= 30
 
     def work(self):
-        pass
+        self.fullness -= 10
 
     def gaming(self):
-        pass
+        self.fullness -= 10
 
 
-class Wife:
+class Wife(Human):
 
-    def __init__(self):
-        pass
+    def __init__(self, name):
+        super().__init__()
+        self.name = name
 
     def __str__(self):
         return super().__str__()
 
     def act(self):
-        pass
+        self.fullness -= 10
 
     def eat(self):
         pass
 
     def shopping(self):
-        pass
+        self.fullness -= 10
 
     def buy_fur_coat(self):
-        pass
+        self.fullness -= 10
 
     def clean_house(self):
-        pass
+        self.fullness -= 10
 
 
 home = House()
 serge = Husband(name='Сережа')
 masha = Wife(name='Маша')
 
-for day in range(365):
+for day in range(3):
     cprint('================== День {} =================='.format(day), color='red')
     serge.act()
     masha.act()
@@ -131,23 +154,23 @@ for day in range(365):
 #
 # Если кот дерет обои, то грязи становится больше на 5 пунктов
 
-
-class Cat:
-
-    def __init__(self):
-        pass
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def sleep(self):
-        pass
-
-    def soil(self):
-        pass
+#
+# class Cat:
+#
+#     def __init__(self, name):
+#         self.name = name
+#
+#     def act(self):
+#         pass
+#
+#     def eat(self):
+#         pass
+#
+#     def sleep(self):
+#         pass
+#
+#     def soil(self):
+#         pass
 
 
 ######################################################## Часть вторая бис
@@ -160,51 +183,51 @@ class Cat:
 #
 # отличия от взрослых - кушает максимум 10 единиц еды,
 # степень счастья  - не меняется, всегда ==100 ;)
-
-class Child:
-
-    def __init__(self):
-        pass
-
-    def __str__(self):
-        return super().__str__()
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def sleep(self):
-        pass
-
-
-# TODO после реализации второй части - отдать на проверку учителем две ветки
-
-
-######################################################## Часть третья
 #
-# после подтверждения учителем второй части (обоих веток)
-# влить в мастер все коммиты из ветки develop и разрешить все конфликты
-# отправить на проверку учителем.
+# class Child:
+#
+#     def __init__(self, name):
+#         self.name = name
+#
+#     def __str__(self):
+#         return super().__str__()
+#
+#     def act(self):
+#         pass
+#
+#     def eat(self):
+#         pass
+#
+#     def sleep(self):
+#         pass
 
 
-home = House()
-serge = Husband(name='Сережа')
-masha = Wife(name='Маша')
-kolya = Child(name='Коля')
-murzik = Cat(name='Мурзик')
-
-for day in range(365):
-    cprint('================== День {} =================='.format(day), color='red')
-    serge.act()
-    masha.act()
-    kolya.act()
-    murzik.act()
-    cprint(serge, color='cyan')
-    cprint(masha, color='cyan')
-    cprint(kolya, color='cyan')
-    cprint(murzik, color='cyan')
+# # TODO после реализации второй части - отдать на проверку учителем две ветки
+#
+#
+# ######################################################## Часть третья
+# #
+# # после подтверждения учителем второй части (обоих веток)
+# # влить в мастер все коммиты из ветки develop и разрешить все конфликты
+# # отправить на проверку учителем.
+#
+#
+# home = House()
+# serge = Husband(name='Сережа')
+# masha = Wife(name='Маша')
+# kolya = Child(name='Коля')
+# murzik = Cat(name='Мурзик')
+#
+# for day in range(3):
+#     cprint('================== День {} =================='.format(day), color='red')
+#     serge.act()
+#     masha.act()
+#     kolya.act()
+#     murzik.act()
+#     cprint(serge, color='cyan')
+#     cprint(masha, color='cyan')
+#     cprint(kolya, color='cyan')
+#     cprint(murzik, color='cyan')
 
 
 # Усложненное задание (делать по желанию)

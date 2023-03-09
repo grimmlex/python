@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Доработать практическую часть урока lesson_007/python_snippets/08_practice.py
-import colorama
 # Необходимо создать класс кота. У кота есть аттрибуты - сытость и дом (в котором он живет).
 # Кот живет с человеком в доме.
 # Для кота дом характеризируется - миской для еды и грязью.
@@ -31,7 +30,7 @@ import colorama
 from colorama import init, Fore, Back, Style
 from termcolor import cprint, colored
 from random import randint
-colorama.init(autoreset=True)
+init(autoreset=True)
 
 
 # Реализуем модель человека.
