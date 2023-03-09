@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Доработать практическую часть урока lesson_007/python_snippets/08_practice.py
-
+import colorama
 # Необходимо создать класс кота. У кота есть аттрибуты - сытость и дом (в котором он живет).
 # Кот живет с человеком в доме.
 # Для кота дом характеризируется - миской для еды и грязью.
@@ -28,8 +28,10 @@
 # Им всем вместе так же надо прожить 365 дней.
 
 # (Можно определить критическое количество котов, которое может прокормить человек...)
-from termcolor import cprint
+from colorama import init, Fore, Back, Style
+from termcolor import cprint, colored
 from random import randint
+colorama.init(autoreset=True)
 
 
 # Реализуем модель человека.
@@ -52,14 +54,14 @@ class Man:
 
     def eat(self):
         if self.house.food >= 10:
-            cprint('{} поел'.format(self.name), color='yellow')
+            print(colored('{} поел'.format(self.name), color='yellow'))
             self.fullness += 10
             self.house.food -= 10
         else:
             cprint('{} нет еды'.format(self.name), color='red')
 
     def work(self):
-        cprint('{} сходил на работу'.format(self.name), color='blue')
+        print(Fore.MAGENTA + '{} сходил на работу'.format(self.name))
         self.house.money += 150
         self.fullness -= 10
 
@@ -90,6 +92,7 @@ class Man:
 
     def clean_house(self):
         if self.fullness > 20:
+            print(f'{self.name} Убрал за {self.house.cat}')
             self.house.cat_dirt -= 100
             self.fullness -= 20
         else:
@@ -100,15 +103,15 @@ class Man:
             cprint('{} умер...'.format(self.name), color='red')
             return
         dice = randint(1, 6)
-        if self.fullness < 20:
+        if self.fullness < 30:
             self.eat()
-        elif self.house.food < 10:
+        elif self.house.food < 20:
             self.shopping()
-        elif self.house.money < 50:
+        elif self.house.money < 100:
             self.work()
         elif self.house.cat_bowl < 50:
             self.get_cat_food()
-        elif self.house.cat_dirt >= 100:
+        elif self.house.cat_dirt > 100:
             self.clean_house()
         elif dice == 1:
             self.work()
@@ -125,6 +128,7 @@ class Man:
             self.house.cat = cat.name
             cat.house = self.house
             print(f"{self.name} завёл кота {self.house.cat}")
+
 
 class House:
 
@@ -150,6 +154,31 @@ class Cat:
         return 'Я - кот {}, сытость {}'.format(
             self.name, self.fullness)
 
+    def sleep(self):
+        print(f"{self.name} поспал!")
+        self.fullness -= 10
+
+    def eat(self):
+        print(f"{self.name} поел!")
+        self.fullness += 20
+        self.house.cat_bowl -= 10
+
+    def scratches_wallpaper(self):
+        print(f"{self.name} нашкодил!")
+        self.fullness -= 10
+        self.house.cat_dirt += 10
+
+    def act(self):
+        if self.fullness <= 0:
+            cprint(f'{self.name} умер...', color='red')
+            return
+        dice = randint(1, 6)
+        if self.fullness < 20:
+            self.eat()
+        elif dice == 2 or dice == 1:
+            self.scratches_wallpaper()
+        else:
+            self.sleep()
 
 citizens = [
     Man(name='Бивис'),
@@ -158,7 +187,8 @@ citizens = [
 ]
 
 cats = [
-    Cat(name="Мурзик")
+    Cat(name="Мурзик"),
+    Cat(name="Барсик"),
 ]
 
 my_sweet_home = House()
@@ -166,12 +196,14 @@ my_sweet_home = House()
 for citizen in citizens:
     citizen.go_to_the_house(house=my_sweet_home)
 
-citizens[randint(0, len(citizens))-1].get_cat()
+citizens[randint(0, len(citizens)) - 1].get_cat()
 
-for day in range(1, 17):
-    print('================ день {} =================='.format(day))
+for day in range(1, 366):
+    cprint('================ день {} =================='.format(day), color= "green")
     for citizen in citizens:
         citizen.act()
+    for cat in cats:
+        cat.act()
     print('--- в конце дня ---')
     for citizen in citizens:
         print(citizen)
