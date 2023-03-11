@@ -12,6 +12,7 @@ class House:
     def __init__(self):
         self.money = 100
         self.food = 100
+        self.cat_food = 30
         self.dirt = 0
         self.all_money = self.money
         self.all_food = 0
@@ -19,7 +20,8 @@ class House:
 
     def __str__(self):
         self.dirt += 5
-        return f'В доме: денег - {self.money}, еды в холодильнике - {self.food}, грязи - {self.dirt}'
+        return f'В доме: денег - {self.money}, еды в холодильнике - {self.food}, грязи - {self.dirt}, еды для кота - ' \
+               f'{self.cat_food}'
 
 
 class Human:
@@ -43,6 +45,9 @@ class Human:
             self.house.food -= total_food
         self.house.all_food += total_food
         print(f'{self.name} поел(а), {total_food} единиц')
+
+    def pet_cat(self):
+        self.happiness += 5
 
     def act(self):
         if self.fullness <= 0:
@@ -113,6 +118,10 @@ class Wife(Human):
         self.fullness -= 10
         self.house.food += 50
         self.house.money -= 50
+        if self.house.cat_food < 10:
+            self.house.cat_food += 20
+            self.house.money -= 20
+            return print(f'{self.name} пошла за покупками и купила еды коту')
         print(f'{self.name} пошла за покупками')
 
     def buy_fur_coat(self):
@@ -159,65 +168,70 @@ class Wife(Human):
             return print(f'{self.name} умер от голода')
 
 
+class Cat:
+    def __init__(self, name, house):
+        self.name = name
+        self.fullness = 30
+        self.house = house
+
+    def __str__(self):
+        return f'Я {self.name} - моя сытость {self.fullness}'
+
+    def act(self):
+        if self.fullness < 0:
+            return print(f'{self.name} умер от голода')
+        if self.fullness < 10:
+            return self.eat()
+        dice = randint(1, 3)
+        if dice == 1:
+            return self.soil()
+        else:
+            return self.sleep()
+
+    def eat(self):
+        total_food = randint(1, 10)
+        if self.house.cat_food > total_food:
+            self.fullness += total_food*2
+            self.house.cat_food -= total_food
+        else:
+            total_food = self.house.cat_food
+            self.house.cat_food -= total_food
+        print(f'{self.name} поел.')
+
+    def sleep(self):
+        self.fullness -= 10
+        print(f'{self.name} спит.')
+
+    def soil(self):
+        self.fullness -= 10
+        self.house.dirt += 5
+        print(f'{self.name} нашкодил.')
+
+
 home = House()
 
 humans = [
     Husband(name='Сережа', house=home),
     Wife(name='Маша', house=home),
 ]
+
+cats = [
+    Cat(name='Барсик',house=home),
+]
 for day in range(365):
     cprint(f'================== День {day + 1} ==================', color='red')
     for human in humans:
         human.act()
+    for cat in cats:
+        cat.act()
     for human in humans:
         cprint(human, color='cyan')
+    for cat in cats:
+        cprint(cat, color='cyan')
 
     cprint(home, color='cyan')
 
 print(f'{home.all_money} - денег заработано, {home.all_food} - еды съедено, {home.num_coat} - шуб куплено')
-
-# Часть вторая
-#
-# После подтверждения учителем первой части надо
-# отщепить ветку develop и в ней начать добавлять котов в модель семьи
-#
-# Кот может:
-#   есть,
-#   спать,
-#   драть обои
-#
-# Люди могут:
-#   гладить кота (растет степень счастья на 5 пунктов)
-#
-# В доме добавляется:
-#   еда для кота (в начале - 30)
-#
-# У кота есть имя и степень сытости (в начале - 30)
-# Любое действие кота, кроме "есть", приводит к уменьшению степени сытости на 10 пунктов
-# Еда для кота покупается за деньги: за 10 денег 10 еды.
-# Кушает кот максимум по 10 единиц еды, степень сытости растет на 2 пункта за 1 пункт еды.
-# Степень сытости не должна падать ниже 0, иначе кот умрет от голода.
-#
-# Если кот дерет обои, то грязи становится больше на 5 пунктов
-
-#
-# class Cat:
-#
-#     def __init__(self, name):
-#         self.name = name
-#
-#     def act(self):
-#         pass
-#
-#     def eat(self):
-#         pass
-#
-#     def sleep(self):
-#         pass
-#
-#     def soil(self):
-#         pass
-
 
 # Часть вторая бис
 #
