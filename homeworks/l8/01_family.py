@@ -53,6 +53,9 @@ class House:
         self.money = 100
         self.food = 100
         self.dirt = 0
+        self.all_money = self.money
+        self.all_food = 0
+        self.num_coat = 0
 
     def __str__(self):
         self.dirt += 5
@@ -78,6 +81,7 @@ class Human:
         else:
             self.fullness += total_food
             self.house.food -= total_food
+        self.house.all_food += total_food
         print(f'{self.name} поел(а), {total_food} единиц')
 
     def act(self):
@@ -107,6 +111,8 @@ class Husband(Human):
     def work(self):
         self.fullness -= 10
         self.house.money += 150
+        self.house.all_money += 150
+
         print(f'{self.name} пошёл на работу')
 
     def gaming(self):
@@ -141,7 +147,6 @@ class Wife(Human):
         super().__init__()
         self.name = name
         self.house = house
-        self.num_coat = 0
 
     def __str__(self):
         return super().__str__()
@@ -156,9 +161,9 @@ class Wife(Human):
         if self.house.money > 350:
             self.fullness -= 10
             self.house.money -= 350
-            self.num_coat += 1
+            self.house.num_coat += 1
             self.happiness += 60
-            print(f'{self.name} решила купить себе пальто. Уже есть {self.num_coat})')
+            print(f'{self.name} решила купить себе пальто.)')
         else:
             print(f'{self.name} хотела купить себе пальто. Но денег нет)')
 
@@ -210,8 +215,8 @@ for day in range(365):
 
     cprint(home, color='cyan')
 
-# TODO после реализации первой части - отдать на проверку учителю
 
+print(f'{home.all_money} - денег заработано, {home.all_food} - еды съедено, {home.num_coat} - шуб куплено')
 ######################################################## Часть вторая
 #
 # После подтверждения учителем первой части надо
