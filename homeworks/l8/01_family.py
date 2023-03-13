@@ -28,21 +28,22 @@ class Human:
         self.happiness = 100
         self.house = None
         self.name = None
+        self.total_food = 0
 
     def __str__(self):
         return f'Я {self.name} - моя сытость {self.fullness}, моё счастье {self.happiness}'
 
     def eat(self):
-        total_food = randint(10, 30)
-        if total_food > self.house.food:
-            total_food = self.house.food
-            self.fullness += total_food
-            self.house.food -= total_food
+
+        if self.total_food > self.house.food:
+            self.total_food = self.house.food
+            self.fullness += self.total_food
+            self.house.food -= self.total_food
         else:
-            self.fullness += total_food
-            self.house.food -= total_food
-        self.house.all_food += total_food
-        print(f'{self.name} поел(а), {total_food} единиц')
+            self.fullness += self.total_food
+            self.house.food -= self.total_food
+        self.house.all_food += self.total_food
+        print(f'{self.name} поел(а), {self.total_food} единиц')
 
     def act(self):
         if self.fullness <= 0:
@@ -65,6 +66,10 @@ class Husband(Human):
 
     def __str__(self):
         return super().__str__()
+
+    def eat(self):
+        self.total_food = randint(1, 30)
+        super().eat()
 
     def work(self):
         self.fullness -= 10
@@ -108,6 +113,10 @@ class Wife(Human):
 
     def __str__(self):
         return super().__str__()
+
+    def eat(self):
+        self.total_food = randint(1, 30)
+        super().eat()
 
     def shopping(self):
         self.fullness -= 10
@@ -159,98 +168,57 @@ class Wife(Human):
             return print(f'{self.name} умер от голода')
 
 
+class Kid(Human):
+
+    def __init__(self, name, house):
+        super().__init__()
+        self.name = name
+        self.house = house
+        self.total_food = randint(1, 10)
+
+    def __str__(self):
+        return super().__str__()
+
+    def act(self):
+        if self.fullness <= 10:
+            return self.eat()
+        else:
+            return self.sleep()
+
+    def eat(self):
+        self.total_food = randint(1, 10)
+        super().eat()
+
+    def sleep(self):
+        self.fullness -= 10
+        print(f'{self.name} поспал(а)')
+
+
 home = House()
 
 humans = [
     Husband(name='Сережа', house=home),
     Wife(name='Маша', house=home),
 ]
+kids = [
+    Kid(name='Борис', house=home)
+]
 for day in range(365):
     cprint(f'================== День {day + 1} ==================', color='red')
     for human in humans:
         human.act()
+    for kid in kids:
+        kid.act()
     for human in humans:
         cprint(human, color='cyan')
+    for kid in kids:
+        cprint(kid, color='cyan')
 
     cprint(home, color='cyan')
 
 print(f'{home.all_money} - денег заработано, {home.all_food} - еды съедено, {home.num_coat} - шуб куплено')
 
-# Часть вторая
-#
-# После подтверждения учителем первой части надо
-# отщепить ветку develop и в ней начать добавлять котов в модель семьи
-#
-# Кот может:
-#   есть,
-#   спать,
-#   драть обои
-#
-# Люди могут:
-#   гладить кота (растет степень счастья на 5 пунктов)
-#
-# В доме добавляется:
-#   еда для кота (в начале - 30)
-#
-# У кота есть имя и степень сытости (в начале - 30)
-# Любое действие кота, кроме "есть", приводит к уменьшению степени сытости на 10 пунктов
-# Еда для кота покупается за деньги: за 10 денег 10 еды.
-# Кушает кот максимум по 10 единиц еды, степень сытости растет на 2 пункта за 1 пункт еды.
-# Степень сытости не должна падать ниже 0, иначе кот умрет от голода.
-#
-# Если кот дерет обои, то грязи становится больше на 5 пунктов
 
-#
-# class Cat:
-#
-#     def __init__(self, name):
-#         self.name = name
-#
-#     def act(self):
-#         pass
-#
-#     def eat(self):
-#         pass
-#
-#     def sleep(self):
-#         pass
-#
-#     def soil(self):
-#         pass
-
-
-# Часть вторая бис
-#
-# После реализации первой части надо в ветке мастер продолжить работу над семьей - добавить ребенка
-#
-# Ребенок может:
-#   есть,
-#   спать,
-#
-# отличия от взрослых - кушает максимум 10 единиц еды,
-# степень счастья  - не меняется, всегда ==100 ;)
-#
-# class Child:
-#
-#     def __init__(self, name):
-#         self.name = name
-#
-#     def __str__(self):
-#         return super().__str__()
-#
-#     def act(self):
-#         pass
-#
-#     def eat(self):
-#         pass
-#
-#     def sleep(self):
-#         pass
-
-
-# # TODO после реализации второй части - отдать на проверку учителем две ветки
-#
-#
 # ######################################################## Часть третья
 # #
 # # после подтверждения учителем второй части (обоих веток)
