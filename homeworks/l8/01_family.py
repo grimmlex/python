@@ -200,7 +200,7 @@ class Cat:
     def eat(self):
         total_food = randint(1, 10)
         if self.house.cat_food > total_food:
-            self.fullness += total_food*2
+            self.fullness += total_food * 2
             self.house.cat_food -= total_food
         else:
             total_food = self.house.cat_food
@@ -251,7 +251,7 @@ humans = [
 ]
 
 cats = [
-    Cat(name='Барсик',house=home),
+    Cat(name='Барсик', house=home),
 ]
 kids = [
     Kid(name='Борис', house=home)
