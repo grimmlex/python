@@ -8,13 +8,13 @@
 # Формат вывода:
 #   Целочисленное деление ХХХ на YYY дает ZZZ
 
-a, b = 179, 39
-result = 0
-print(a%b)
-while a > b:
-    result = a/b
-    result1 = b * int(result)
-    result2 = a - result1
-    a=0
-# TODO здесь ваш код
-print(result2)
+a, b = 179, 25
+
+z = 0
+
+while a >= b:
+    z += 1
+    a -= b
+
+print(z)
+print(a)

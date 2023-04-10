@@ -19,4 +19,4 @@ while educational_years > i:
     i += 1
 total_money = total_money - educational_grant*10
 print(total_money)
-# TODO здесь ваш код
+

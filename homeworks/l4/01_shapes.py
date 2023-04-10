@@ -12,7 +12,7 @@ def draw_shapes(x, y, z):
         v1 = sd.get_vector(start_point, angle)
         v1.draw()
         end = v1.end_point
-        for num in range(z-1):
+        for num in range(z - 1):
             angle += 90
             v = sd.get_vector(end, angle)
             v.draw()
@@ -21,11 +21,12 @@ def draw_shapes(x, y, z):
         v1 = sd.get_vector(start_point, angle)
         v1.draw()
         end = v1.end_point
-        for num in range(z-1):
+        for num in range(z - 1):
             angle += 120
             v = sd.get_vector(end, angle)
             v.draw()
             end = v.end_point
+
 
 draw_shapes(100, 10, 4)
 draw_shapes(400, 10, 3)
