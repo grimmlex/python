@@ -21,14 +21,33 @@
 # Упорядочивание по частоте - по убыванию. Ширину таблицы подберите по своему вкусу
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
 
-file_name = "Война и мир.txt"
-with open(file_name, 'r', encoding='cp1251') as file:
-    count = 0
-    for line in file:
-        print(line)
-        count += 1
-        if count == 10:
-            break
+class Charstats:
+
+    char_stats = {}
+
+    def __init__(self):
+        self.file_name = None
+
+    def get_file(self):
+        self.file_name = "Война и мир.txt"
+
+    def open_file(self):
+
+        with open(self.file_name, 'r', encoding='cp1251') as file:
+            for line in file:
+                for char in line:
+                    if char.isalpha():
+                        if char in self.char_stats:
+                            self.char_stats[char] += 1
+                        else:
+                            self.char_stats[char] = char
+
+
+char = Charstats()
+char.get_file()
+char.open_file()
+print(char.char_stats)
+
 # После выполнения первого этапа нужно сделать упорядочивание статистики
 #  - по частоте по возрастанию
 #  - по алфавиту по возрастанию
