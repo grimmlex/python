@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+from pprint import pprint
+from tabulate import tabulate
 # Подсчитать статистику по буквам в романе Война и Мир.
 # Входные параметры: файл для сканирования
 # Статистику считать только для букв алфавита (см функцию .isalpha() для строк)
@@ -22,17 +23,15 @@
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
 
 class Charstats:
-
     char_stats = {}
 
     def __init__(self):
         self.file_name = None
 
-    def get_file(self):
-        self.file_name = "Война и мир.txt"
+    def get_file(self, name):
+        self.file_name = name
 
     def open_file(self):
-
         with open(self.file_name, 'r', encoding='cp1251') as file:
             for line in file:
                 for char in line:
@@ -40,13 +39,20 @@ class Charstats:
                         if char in self.char_stats:
                             self.char_stats[char] += 1
                         else:
-                            self.char_stats[char] = char
+                            self.char_stats[char] = 0
+
+    def sort_dict(self):
+        total = sum(self.char_stats.values())
+        result = sorted(self.char_stats.items(), key=lambda x: x[1], reverse=True)
+        result.append(('Итого', total))
+        return result
 
 
-char = Charstats()
-char.get_file()
-char.open_file()
-print(char.char_stats)
+chars = Charstats()
+chars.get_file("Война и мир.txt")
+chars.open_file()
+
+print(tabulate(chars.sort_dict(), headers=['Буква', 'Частота'], tablefmt="psql", stralign='center'))
 
 # После выполнения первого этапа нужно сделать упорядочивание статистики
 #  - по частоте по возрастанию
