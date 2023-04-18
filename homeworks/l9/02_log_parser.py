@@ -18,9 +18,22 @@
 #
 # Входные параметры: файл для анализа, файл результата
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
+from pyparsing import *
 
-# TODO здесь ваш код
 
+class Parser:
+
+    def __init__(self, name):
+        self.file_name = name
+
+    def openfile(self):
+        with open(self.file_name, 'r', encoding='cp1251') as file:
+            for line in file:
+                print(line)
+
+
+p1 = Parser('events.txt')
+p1.openfile()
 # После выполнения первого этапа нужно сделать группировку событий
 #  - по часам
 #  - по месяцу
