@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from pprint import pprint
 
 # Имеется файл events.txt вида:
 #
@@ -25,15 +26,36 @@ class Parser:
 
     def __init__(self, name):
         self.file_name = name
+        self.dict = {}
 
-    def openfile(self):
+    def openfile(self, out_file_name=None):
+        if out_file_name is not None:
+            out_file = open(out_file_name, 'w')
+        else:
+            out_file = None
+
         with open(self.file_name, 'r', encoding='cp1251') as file:
-            for line in file:
-                print(line)
+            if out_file:
+                date = Word(nums + "- :")
+                self_time = Word('.' + nums)
+                word = Word('NOK')
+                parse_module = (Suppress('[') + date + Suppress(self_time) + Suppress(']') + Suppress(word))('event_time')
+                result = OneOrMore(Group(parse_module))
+                datafile = result.parseString(file.read()).asList()
+                for item in datafile:
+                    if item[0][:-3] in self.dict:
+                        self.dict[item[0][:-3]] += 1
+                    else:
+                        self.dict[item[0][:-3]] = 1
+                for key, value in self.dict.items():
+                    out_file.write(str(f'{key} {value}\n'))
+        if out_file:
+            out_file.close()
 
 
 p1 = Parser('events.txt')
-p1.openfile()
+p1.openfile(out_file_name='out.txt')
+
 # После выполнения первого этапа нужно сделать группировку событий
 #  - по часам
 #  - по месяцу
