@@ -37,12 +37,28 @@ import os, time, shutil
 test = list(os.walk('icons'))
 
 
-for i in test:
-    if i[2]:
-        for y in i[2]:
-            normal = os.path.join(i[0], y)
-            print(time.gmtime(os.path.getmtime(normal)))
+class SortFiles:
+    def __init__(self):
+        self.dir_list = []
+        self.start_dir = None
+        self.end_dir = None
+        self.final_time = []
 
+    def makeList(self):
+        self.dir_list = list(os.walk('icons'))
+
+    def getTime(self):
+        for i in self.dir_list:
+            if i[2]:
+                for y in i[2]:
+                    normal = os.path.join(i[0], y)
+                    self.final_time = list(time.gmtime(os.path.getmtime(normal)))
+                    print(self.final_time[0])
+
+
+files = SortFiles()
+files.makeList()
+files.getTime()
 
 # Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
