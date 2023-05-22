@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, time, shutil
+from pprint import pprint
 
 # Нужно написать скрипт для упорядочивания фотографий (вообще любых файлов)
 # Скрипт должен разложить файлы из одной папки по годам и месяцам в другую.
@@ -34,31 +35,35 @@ import os, time, shutil
 # Чтение документации/гугла по функциям - приветствуется. Как и поиск альтернативных вариантов :)
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
 
-test = list(os.walk('icons'))
-
-
 class SortFiles:
-    def __init__(self):
-        self.dir_list = []
-        self.start_dir = None
-        self.end_dir = None
-        self.final_time = []
+    def __init__(self, start_dir, new_dir):
+        self.file_dict = {}
+        self.start_dir = str(start_dir)
+        self.new_dir = str(new_dir)
+        os.makedirs(self.new_dir, exist_ok=True)
+        self.start_dir_list = list(os.walk(self.start_dir))
 
-    def makeList(self):
-        self.dir_list = list(os.walk('icons'))
+        self.create_files_dict()
+        self.make_dir()
 
-    def getTime(self):
-        for i in self.dir_list:
+    def create_files_dict(self):
+        for i in self.start_dir_list:
             if i[2]:
                 for y in i[2]:
-                    normal = os.path.join(i[0], y)
-                    self.final_time = list(time.gmtime(os.path.getmtime(normal)))
-                    print(self.final_time[0])
+                    normal_path = os.path.join(i[0], y)
+                    self.file_dict[normal_path] = list(time.gmtime(os.path.getmtime(normal_path)))
+
+    def make_dir(self):
+        for keys, year in self.file_dict.items():
+            if year[0] not in list(os.walk(self.new_dir))[0][1]:
+                os.makedirs(f'{self.new_dir}/{year[0]}', exist_ok=True)
+                new_path = f'{self.new_dir}/{year[0]}'
+                if year[1] not in list(os.walk(new_path))[0][1]:
+                    os.makedirs(f'{self.new_dir}/{year[0]}/{year[1]}', exist_ok=True)
+                    shutil.copy2(keys, f'{self.new_dir}/{year[0]}/{year[1]}')
 
 
-files = SortFiles()
-files.makeList()
-files.getTime()
+files = SortFiles(start_dir='icons', new_dir='icons_by_year')
 
 # Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
