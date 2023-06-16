@@ -16,9 +16,16 @@
 # кармы до уровня ENLIGHTENMENT_CARMA_LEVEL. Исключения обработать и записать в лог.
 # При создании собственных исключений максимально использовать функциональность
 # базовых встроенных исключений.
+from random import randint
 
 ENLIGHTENMENT_CARMA_LEVEL = 777
 
-# TODO здесь ваш код
 
-# https://goo.gl/JnsDqu
+def one_day():
+    pass
+    carma = randint(1, 7)
+    return carma
+
+
+
+print(one_day())
