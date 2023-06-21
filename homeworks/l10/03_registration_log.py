@@ -22,4 +22,34 @@
 # - поле возраст НЕ является числом от 10 до 99: ValueError
 # Вызов метода обернуть в try-except.
 
-# TODO здесь ваш код
+import os
+
+FILE_NAME = 'registrations.txt'
+
+
+class Check_email:
+    def __init__(self, filename):
+        self.filename = filename
+        self.email_list = []
+        self.correct_email_list = []
+
+    def open_file(self):
+        with open(self.filename, 'r', encoding='utf8') as file:
+            for line in file:
+                self.email_list.append(line.split(' '))
+
+    def check_data(self):
+        for line in self.email_list:
+            if len(line) > 2:
+                if line[0].isalpha():
+                    if '@' and '.' in line[1]:
+                        if 10 < int(line[2]) < 99:
+                            self.correct_email_list.append(line)
+        print(len(self.correct_email_list))
+
+
+
+
+star = Check_email(FILE_NAME)
+star.open_file()
+star.check_data()
