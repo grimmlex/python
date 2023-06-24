@@ -27,6 +27,52 @@ import os
 FILE_NAME = 'registrations.txt'
 
 
+class MyError(Exception):
+    pass
+
+
+class ValueError(MyError):
+    def __init__(self, *args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+
+    def __str__(self):
+        if self.message:
+            return f'ValueError, {self.message}'
+        else:
+            return 'ValueError has been raised'
+
+
+class NotNameError(MyError):
+    def __init__(self, *args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+
+    def __str__(self):
+        if self.message:
+            return f'NotNameError, {self.message}'
+        else:
+            return 'NotNameError has been raised'
+
+
+class NotEmailError(MyError):
+    def __init__(self, *args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+
+    def __str__(self):
+        if self.message:
+            return f'NotEmailError, {self.message}'
+        else:
+            return 'NotEmailError has been raised'
+
+
 class Check_email:
     def __init__(self, filename):
         self.filename = filename
@@ -38,6 +84,9 @@ class Check_email:
             for line in file:
                 self.email_list.append(line.split(' '))
 
+    def check_number_elem(self, list):
+        for line in list:
+            pass
     def check_data(self):
         for line in self.email_list:
             if len(line) > 2:
@@ -49,7 +98,6 @@ class Check_email:
 
 
 
-
 star = Check_email(FILE_NAME)
 star.open_file()
-star.check_data()
+
