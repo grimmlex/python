@@ -21,83 +21,65 @@
 # - поле емейл НЕ содержит @ и .(точку): NotEmailError (кастомное исключение)
 # - поле возраст НЕ является числом от 10 до 99: ValueError
 # Вызов метода обернуть в try-except.
+import logging
 
-import os
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+handler = logging.FileHandler('registrations_bad.log', 'w', 'utf-8')
+handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s')) # or whatever
+root_logger.addHandler(handler)
 
 FILE_NAME = 'registrations.txt'
 
 
-class MyError(Exception):
+class PredictionError(Exception):
+    """Error occurred during prediction."""
+
+
+class ValueError(PredictionError):
     pass
 
+class NotNameError(PredictionError):
+    pass
 
-class ValueError(MyError):
-    def __init__(self, *args):
-        if args:
-            self.message = args[0]
-        else:
-            self.message = None
-
-    def __str__(self):
-        if self.message:
-            return f'ValueError, {self.message}'
-        else:
-            return 'ValueError has been raised'
-
-
-class NotNameError(MyError):
-    def __init__(self, *args):
-        if args:
-            self.message = args[0]
-        else:
-            self.message = None
-
-    def __str__(self):
-        if self.message:
-            return f'NotNameError, {self.message}'
-        else:
-            return 'NotNameError has been raised'
-
-
-class NotEmailError(MyError):
-    def __init__(self, *args):
-        if args:
-            self.message = args[0]
-        else:
-            self.message = None
-
-    def __str__(self):
-        if self.message:
-            return f'NotEmailError, {self.message}'
-        else:
-            return 'NotEmailError has been raised'
+class NotEmailError(PredictionError):
+   pass
 
 
 class Check_email:
     def __init__(self, filename):
         self.filename = filename
         self.email_list = []
-        self.correct_email_list = []
 
     def open_file(self):
         with open(self.filename, 'r', encoding='utf8') as file:
             for line in file:
                 self.email_list.append(line.split(' '))
 
-    def check_number_elem(self, list):
-        for line in list:
-            pass
-    def check_data(self):
+    def check_number_elem(self):
         for line in self.email_list:
-            if len(line) > 2:
-                if line[0].isalpha():
-                    if '@' and '.' in line[1]:
-                        if 10 < int(line[2]) < 99:
-                            self.correct_email_list.append(line)
-        print(len(self.correct_email_list))
+            if not len(line) > 2:
+                self.email_list.remove(line)
+                logging.info(f'ValueError in {line}', stack_info=True)
+                # raise ValueError(f"influence data in {line}")
+
+    # def check_data(self):
+    #     for line in self.email_list:
+    #         if len(line) > 2:
+    #             if line[0].isalpha():
+    #                 if '@' and '.' in line[1]:
+    #                     if 10 < int(line[2]) < 99:
+    #                         self.correct_email_list.append(line)
+    #     print(len(self.correct_email_list))
 
 
+try:
+    star = Check_email(FILE_NAME)
+    star.open_file()
+    print(len(star.email_list))
+    star.check_number_elem()
+    print(len(star.email_list))
 
-star = Check_email(FILE_NAME)
-star.open_file()
+except Exception as e:
+    logging.error(f'Error {e}')
 
