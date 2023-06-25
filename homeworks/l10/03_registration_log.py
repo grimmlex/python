@@ -26,7 +26,7 @@ import logging
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
 handler = logging.FileHandler('registrations_bad.log', 'w', 'utf-8')
-handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s')) # or whatever
+handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))  # or whatever
 root_logger.addHandler(handler)
 
 FILE_NAME = 'registrations.txt'
@@ -36,50 +36,71 @@ class PredictionError(Exception):
     """Error occurred during prediction."""
 
 
-class ValueError(PredictionError):
+class MyValueError(PredictionError):
     pass
+
+
+class EightError(MyValueError):
+    pass
+
 
 class NotNameError(PredictionError):
     pass
 
+
 class NotEmailError(PredictionError):
-   pass
+    pass
 
 
-class Check_email:
-    def __init__(self, filename):
-        self.filename = filename
+class CheckEmail:
+    def __init__(self):
         self.email_list = []
 
-    def open_file(self):
-        with open(self.filename, 'r', encoding='utf8') as file:
+    def open_file(self, filename):
+        with open(filename, 'r', encoding='utf8') as file:
             for line in file:
                 self.email_list.append(line.split(' '))
 
-    def check_number_elem(self):
-        for line in self.email_list:
-            if not len(line) > 2:
-                self.email_list.remove(line)
-                logging.info(f'ValueError in {line}', stack_info=True)
-                # raise ValueError(f"influence data in {line}")
+    def check_number_elem(self, line):
+        if not len(line) > 2:
+            self.email_list.remove(line)
+            raise MyValueError(f'Заполнены не все три поля, в строке - {line}')
 
-    # def check_data(self):
-    #     for line in self.email_list:
-    #         if len(line) > 2:
-    #             if line[0].isalpha():
-    #                 if '@' and '.' in line[1]:
-    #                     if 10 < int(line[2]) < 99:
-    #                         self.correct_email_list.append(line)
-    #     print(len(self.correct_email_list))
+    def check_name_isalpha(self, line):
+        if not line[0].isalpha():
+            self.email_list.remove(line)
+            raise NotNameError(f'Имя содержит не только буквы, в строке - {line}')
+
+    def check_email(self, line):
+        if not ('@' and '.') in line[1]:
+            self.email_list.remove(line)
+            raise NotEmailError(f'Не верный email, в строке - {line}')
+
+    def check_eight(self, line):
+        if not (10 < int(line[2]) < 99):
+            self.email_list.remove(line)
+            raise EightError(f'Не верный возраст, в строке - {line}')
+
+    def lets_go(self, filename):
+        self.open_file(filename)
+        for line in warn.email_list:
+            try:
+                warn.check_number_elem(line)
+                warn.check_name_isalpha(line)
+                warn.check_email(line)
+                warn.check_eight(line)
+            except EightError:
+                logging.info(f'Не верный возраст- {line}', stack_info=False)
+            except MyValueError:
+                logging.info(f'Не все три элемента в строке - {line}', stack_info=False)
+                # print(f"{e}")
+            except NotNameError:
+                logging.info(f'В имени не только буквы- {line}', stack_info=False)
+                # print(f"{e1}")
+            except NotEmailError:
+                logging.info(f'Не верный емайл- {line}', stack_info=False)
+                # print(f"{e1}")
 
 
-try:
-    star = Check_email(FILE_NAME)
-    star.open_file()
-    print(len(star.email_list))
-    star.check_number_elem()
-    print(len(star.email_list))
-
-except Exception as e:
-    logging.error(f'Error {e}')
-
+warn = CheckEmail()
+warn.lets_go(FILE_NAME)
