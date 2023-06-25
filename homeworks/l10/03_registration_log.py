@@ -100,6 +100,9 @@ class CheckEmail:
             except NotEmailError:
                 logging.info(f'Не верный емайл- {line}', stack_info=False)
                 # print(f"{e1}")
+        with open(file='registrations_good.log', mode='w', encoding='utf-8') as file:
+            for i in self.email_list:
+                file.write(str(i) + '\n')
 
 
 warn = CheckEmail()
