@@ -1,50 +1,36 @@
 # -*- coding: utf-8 -*-
 
 
-# Есть функция генерации списка простых чисел
+class PrimeNumbers:
+
+    def __init__(self, n):
+        self.n = n
+
+    def __iter__(self):
+        prime_numbers = []
+        for number in range(2, self.n + 1):
+            for prime in prime_numbers:
+                if number % prime == 0:
+                    break
+            else:
+                prime_numbers.append(number)
+        return iter(prime_numbers)
 
 
-def get_prime_numbers(n):
-    prime_numbers = []
-    for number in range(2, n+1):
-        for prime in prime_numbers:
+# prime_number_iterator = PrimeNumbers(n=10000)
+#
+# for number in prime_number_iterator:
+#     print(number)
+
+def prime_numbers_generator(n):
+    primes = []
+    for number in range(2, n + 1):
+        for prime in primes:
             if number % prime == 0:
                 break
         else:
-            prime_numbers.append(number)
-    return prime_numbers
-
-# Часть 1
-# На основе алгоритма get_prime_numbers создать класс итерируемых обьектов,
-# который выдает последовательность простых чисел до n
-#
-# Распечатать все простые числа до 10000 в столбик
-
-
-class PrimeNumbers:
-    pass
-    # TODO здесь ваш код
-
-
-prime_number_iterator = PrimeNumbers(n=10000)
-for number in prime_number_iterator:
-    print(number)
-
-
-# TODO после подтверждения части 1 преподователем, можно делать
-# Часть 2
-# Теперь нужно создать генератор, который выдает последовательность простых чисел до n
-# Распечатать все простые числа до 10000 в столбик
-
-
-def prime_numbers_generator(n):
-    pass
-    # TODO здесь ваш код
-
-
-for number in prime_numbers_generator(n=10000):
-    print(number)
-
+            yield number
+            primes.append(number)
 
 # Часть 3
 # Написать несколько функций-фильтров, которые выдает True, если число:
@@ -61,3 +47,32 @@ for number in prime_numbers_generator(n=10000):
 # простых счастливых палиндромных чисел и так далее. Придумать не менее 2х способов.
 #
 # Подсказка: возможно, нужно будет добавить параметр в итератор/генератор.
+
+def lucky_number_filter(n):
+    num = str(n)
+    if len(num) % 2:
+        half_number = int(len(num) / 2)
+        left_num = [int(digit) for digit in num[0:half_number]]
+        right_num = [int(digit) for digit in num[half_number + 1:]]
+        return True if sum(left_num) == sum(right_num) else False
+
+
+
+def palyndrome_number_filter(n):
+    num = str(n)
+    res = ''.join(reversed(num))
+    return True if res == num else False
+
+
+
+
+def automorphic_filter(n):
+    automorphic_number = n**2
+    num = str(n)
+    return True if num == str(automorphic_number)[len(num):] else False
+
+
+prime_number_iterator = PrimeNumbers(n=10000)
+
+fil = filter(palyndrome_number_filter, prime_numbers_generator(n=100000))
+print(list(fil))
