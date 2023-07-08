@@ -28,7 +28,7 @@ def draw_shapes(x, y, z):
             end = v.end_point
 
 
-draw_shapes(100, 10, 4)
+draw_shapes(100, 10, 5)
 draw_shapes(400, 10, 3)
 
 # Часть 2 (делается после зачета первой части)

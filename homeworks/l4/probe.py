@@ -1,12 +1,9 @@
-def pig_it(text):
-    res = []
-    split_text = text.split()
-    for item in split_text:
-        if item.isalpha():
-            res.append(item[1:] + item[0] + "ay")
-            print(item[1:] + item[0] + "ay")
-        else:
-            res.append(item)
-    return " ".join(res)
+def get(n):
+    turn_angle = 120 if n == 3 else (((n - 2) * 180) / n)
+    result = turn_angle
+    print(turn_angle)
+    print(round(result, 2))
 
-print(pig_it('Pig latin is cool !'))
+
+
+get(7)
