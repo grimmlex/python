@@ -73,4 +73,67 @@
 #     def run(self):
 #         <обработка данных>
 
-# TODO написать код в однопоточном/однопроцессорном стиле
+from os import scandir
+from pprint import pprint
+
+
+class TradesVolatility:
+
+    def __init__(self, path):
+        self.files_path = path
+        self.files_dict = {}
+        self.volatility_dict = {}
+        self.max_volatility_dict = {}
+        self.min_volatility_dict = {}
+        self.zero_volatility_list = []
+
+    def get_files(self):
+        self.files_dict = {i.name: i.path for i in scandir(self.files_path)}
+
+    def open_files(self):
+        for i in self.files_dict.items():
+            with open(i[1], 'r', encoding='cp1251') as file:
+                self.get_volatility(file)
+
+    def get_volatility(self, file):
+        res = []
+        res1 = []
+        for line in file:
+            res1 = line.split(',')
+            if not res1[2].isalpha():
+                res.append(float(res1[2]))
+
+        max_cost = max(res)
+        min_cost = min(res)
+        average_price = (max_cost + min_cost) / 2
+        volatility = ((max_cost-min_cost)/average_price) * 100
+
+        self.volatility_dict[res1[0]] = volatility
+        self.volatility_dict_sorted = dict(sorted(self.volatility_dict.items(), key=lambda item: item[1]))
+
+
+
+    def get_zero_volatility(self):
+        for k, y in self.volatility_dict_sorted.items():
+            if y == 0 or y == 0.0:
+                self.zero_volatility_list.append(k)
+
+    def get_3max_volatility(self):
+        self.max_volatility_dict = self.volatility_dict_sorted[:-3]
+
+    def get_3min_volatility(self):
+        pass
+
+    def run(self):
+        self.get_files()
+        self.open_files()
+        self.get_zero_volatility()
+        print(self.volatility_dict_sorted)
+        print(self.max_volatility_dict)
+
+
+file_path = 'trades'
+
+lan = TradesVolatility(file_path)
+
+lan.run()
