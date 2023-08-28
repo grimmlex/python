@@ -17,6 +17,83 @@
 #       ТИКЕР7, ТИКЕР8, ТИКЕР9, ТИКЕР10, ТИКЕР11, ТИКЕР12
 # Волатильности указывать в порядке убывания. Тикеры с нулевой волатильностью упорядочить по имени.
 #
-# TODO Внимание! это задание можно выполнять только после зачета lesson_012/01_volatility.py !!!
 
-# TODO тут ваш код в многопоточном стиле
+from os import scandir
+
+class TradesVolatility:
+
+    def __init__(self, path):
+        self.files_path = path
+        self.files_dict = {}
+        self.volatility_dict = {}
+        self.max_volatility_dict = {}
+        self.zero_volatility_list = []
+        self.min_volatility_dict = {}
+        self.volatility_dict_sorted = {}
+
+    def get_files(self):
+        self.files_dict = {i.name: i.path for i in scandir(self.files_path)}
+
+    def open_files(self):
+        for i in self.files_dict.items():
+            with open(i[1], 'r', encoding='cp1251') as file:
+                self.get_volatility(file)
+
+    def get_volatility(self, file):
+        res = []
+        res1 = []
+        for line in file:
+            res1 = line.split(',')
+            if not res1[2].isalpha():
+                res.append(float(res1[2]))
+
+        max_cost = max(res)
+        min_cost = min(res)
+        average_price = (max_cost + min_cost) / 2
+        volatility = ((max_cost-min_cost)/average_price) * 100
+
+        self.volatility_dict[res1[0]] = volatility
+        self.volatility_dict_sorted = dict(sorted(self.volatility_dict.items(), key=lambda item: item[1]))
+
+
+    def get_zero_volatility(self):
+        for k, y in self.volatility_dict_sorted.items():
+            if y == 0 or y == 0.0:
+                self.zero_volatility_list.append(k)
+
+    def get_3min_volatility(self):
+        for k, y in self.volatility_dict_sorted.items():
+            if len(self.min_volatility_dict) > 2:
+                return
+            if y > 0:
+                self.min_volatility_dict[k] = y
+
+    def get_3max_volatility(self):
+        reverse_dict = dict(sorted(self.volatility_dict.items(), key=lambda item: item[1], reverse=True))
+        for k, y in reverse_dict.items():
+            if len(self.max_volatility_dict) > 2:
+                return
+            self.max_volatility_dict[k] = y
+
+    def print_result(self):
+        print('Максимальная волатильность:')
+        for i in self.max_volatility_dict.items():
+            print(f'{i[0]} - {round(i[1], 2)} %')
+        print('Минимальная волатильность:')
+        for i in self.min_volatility_dict.items():
+            print(f'{i[0]} - {round(i[1], 2)} %')
+        print('Нулевая волатильность:')
+        print(', '.join(self.zero_volatility_list))
+    def run(self):
+        self.get_files()
+        self.open_files()
+        self.get_zero_volatility()
+        self.get_3min_volatility()
+        self.get_3max_volatility()
+        self.print_result()
+
+file_path = 'trades'
+
+lan = TradesVolatility(file_path)
+
+lan.run()

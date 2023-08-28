@@ -74,9 +74,6 @@
 #         <обработка данных>
 
 from os import scandir
-import collections
-from pprint import pprint
-
 
 class TradesVolatility:
 
