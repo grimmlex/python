@@ -74,6 +74,7 @@
 #         <обработка данных>
 
 from os import scandir
+import collections
 from pprint import pprint
 
 
@@ -84,8 +85,9 @@ class TradesVolatility:
         self.files_dict = {}
         self.volatility_dict = {}
         self.max_volatility_dict = {}
-        self.min_volatility_dict = {}
         self.zero_volatility_list = []
+        self.min_volatility_dict = {}
+        self.volatility_dict_sorted = {}
 
     def get_files(self):
         self.files_dict = {i.name: i.path for i in scandir(self.files_path)}
@@ -112,25 +114,41 @@ class TradesVolatility:
         self.volatility_dict_sorted = dict(sorted(self.volatility_dict.items(), key=lambda item: item[1]))
 
 
-
     def get_zero_volatility(self):
         for k, y in self.volatility_dict_sorted.items():
             if y == 0 or y == 0.0:
                 self.zero_volatility_list.append(k)
 
-    def get_3max_volatility(self):
-        self.max_volatility_dict = self.volatility_dict_sorted[:-3]
-
     def get_3min_volatility(self):
-        pass
+        for k, y in self.volatility_dict_sorted.items():
+            if len(self.min_volatility_dict) > 2:
+                return
+            if y > 0:
+                self.min_volatility_dict[k] = y
 
+    def get_3max_volatility(self):
+        reverse_dict = dict(sorted(self.volatility_dict.items(), key=lambda item: item[1], reverse=True))
+        for k, y in reverse_dict.items():
+            if len(self.max_volatility_dict) > 2:
+                return
+            self.max_volatility_dict[k] = y
+
+    def print_result(self):
+        print('Максимальная волатильность:')
+        for i in self.max_volatility_dict.items():
+            print(f'{i[0]} - {round(i[1], 2)} %')
+        print('Минимальная волатильность:')
+        for i in self.min_volatility_dict.items():
+            print(f'{i[0]} - {round(i[1], 2)} %')
+        print('Нулевая волатильность:')
+        print(', '.join(self.zero_volatility_list))
     def run(self):
         self.get_files()
         self.open_files()
         self.get_zero_volatility()
-        print(self.volatility_dict_sorted)
-        print(self.max_volatility_dict)
-
+        self.get_3min_volatility()
+        self.get_3max_volatility()
+        self.print_result()
 
 file_path = 'trades'
 
