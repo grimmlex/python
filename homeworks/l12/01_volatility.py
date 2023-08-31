@@ -74,6 +74,20 @@
 #         <обработка данных>
 
 from os import scandir
+from functools import wraps
+from time import perf_counter
+
+
+def timer(func):
+    @wraps(func)
+    def _wrapper(*args, **kwargs):
+        start_time = perf_counter()
+        result = func(*args, **kwargs)
+        run_time = perf_counter() - start_time
+        print(f'Функция {func} отработала {run_time : 0.4f} секунды')
+        return result
+    return _wrapper
+
 
 class TradesVolatility:
 
@@ -105,11 +119,10 @@ class TradesVolatility:
         max_cost = max(res)
         min_cost = min(res)
         average_price = (max_cost + min_cost) / 2
-        volatility = ((max_cost-min_cost)/average_price) * 100
+        volatility = ((max_cost - min_cost) / average_price) * 100
 
         self.volatility_dict[res1[0]] = volatility
         self.volatility_dict_sorted = dict(sorted(self.volatility_dict.items(), key=lambda item: item[1]))
-
 
     def get_zero_volatility(self):
         for k, y in self.volatility_dict_sorted.items():
@@ -139,6 +152,8 @@ class TradesVolatility:
             print(f'{i[0]} - {round(i[1], 2)} %')
         print('Нулевая волатильность:')
         print(', '.join(self.zero_volatility_list))
+
+    @timer
     def run(self):
         self.get_files()
         self.open_files()
@@ -147,8 +162,7 @@ class TradesVolatility:
         self.get_3max_volatility()
         self.print_result()
 
+
 file_path = 'trades'
-
 lan = TradesVolatility(file_path)
-
 lan.run()

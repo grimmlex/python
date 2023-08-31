@@ -18,7 +18,23 @@
 # Волатильности указывать в порядке убывания. Тикеры с нулевой волатильностью упорядочить по имени.
 #
 
+from threading import Thread
 from os import scandir
+from functools import wraps
+from time import perf_counter
+
+
+def timer(func):
+    @wraps(func)
+    def _wrapper(*args, **kwargs):
+        start_time = perf_counter()
+        result = func(*args, **kwargs)
+        run_time = perf_counter() - start_time
+        print(f'Функция {func} отработала {run_time : 0.4f} секунды')
+        return result
+
+    return _wrapper
+
 
 class TradesVolatility:
 
@@ -32,12 +48,12 @@ class TradesVolatility:
         self.volatility_dict_sorted = {}
 
     def get_files(self):
-        self.files_dict = {i.name: i.path for i in scandir(self.files_path)}
+        for i in scandir(self.files_path):
+            yield i.path
 
-    def open_files(self):
-        for i in self.files_dict.items():
-            with open(i[1], 'r', encoding='cp1251') as file:
-                self.get_volatility(file)
+    def open_files(self, filename):
+        with open(filename, 'r', encoding='cp1251') as file:
+            self.get_volatility(file)
 
     def get_volatility(self, file):
         res = []
@@ -50,11 +66,11 @@ class TradesVolatility:
         max_cost = max(res)
         min_cost = min(res)
         average_price = (max_cost + min_cost) / 2
-        volatility = ((max_cost-min_cost)/average_price) * 100
-
+        volatility = ((max_cost - min_cost) / average_price) * 100
         self.volatility_dict[res1[0]] = volatility
-        self.volatility_dict_sorted = dict(sorted(self.volatility_dict.items(), key=lambda item: item[1]))
 
+    def sort_volatility_dict(self):
+        self.volatility_dict_sorted = dict(sorted(self.volatility_dict.items(), key=lambda item: item[1]))
 
     def get_zero_volatility(self):
         for k, y in self.volatility_dict_sorted.items():
@@ -84,16 +100,26 @@ class TradesVolatility:
             print(f'{i[0]} - {round(i[1], 2)} %')
         print('Нулевая волатильность:')
         print(', '.join(self.zero_volatility_list))
+
     def run(self):
-        self.get_files()
-        self.open_files()
+        self.sort_volatility_dict()
         self.get_zero_volatility()
         self.get_3min_volatility()
         self.get_3max_volatility()
         self.print_result()
 
-file_path = 'trades'
+    @timer
+    def main(self):
+        threads = [Thread(target=self.open_files, args=(filename,)) for filename in self.get_files()]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+        self.run()
 
+
+file_path = 'trades'
 lan = TradesVolatility(file_path)
 
-lan.run()
+if __name__ == "__main__":
+    lan.main()
