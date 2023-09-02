@@ -123,8 +123,6 @@ class TradesVolatility:
         self.get_files()
         ctx = multiprocessing.get_context('spawn')
         q_out = ctx.Queue()
-        q1 = ctx.Queue()
-        q1.put(self.get_files())
 
         length = len(self.files_dicts) / 2
         l1 = self.files_dicts[int(length):]
@@ -146,7 +144,7 @@ class TradesVolatility:
         proc2.join()
 
         self.run()
-        print(q1.get()[0])
+
 
 file_path = 'trades'
 lan = TradesVolatility(file_path)
