@@ -21,7 +21,7 @@
 from threading import Thread
 from os import scandir
 from functools import wraps
-from time import perf_counter
+from time import perf_counter, sleep
 
 
 def timer(func):
@@ -51,8 +51,10 @@ class TradesVolatility:
         for i in scandir(self.files_path):
             yield i.path
 
+
     def open_files(self, filename):
         with open(filename, 'r', encoding='cp1251') as file:
+            sleep(1)
             self.get_volatility(file)
 
     def get_volatility(self, file):
@@ -113,6 +115,7 @@ class TradesVolatility:
         threads = [Thread(target=self.open_files, args=(filename,)) for filename in self.get_files()]
         for thread in threads:
             thread.start()
+            print(f'поток {thread} стартовал')
         for thread in threads:
             thread.join()
         self.run()

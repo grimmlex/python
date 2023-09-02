@@ -75,7 +75,7 @@
 
 from os import scandir
 from functools import wraps
-from time import perf_counter
+from time import perf_counter, sleep
 
 
 def timer(func):
@@ -105,6 +105,7 @@ class TradesVolatility:
 
     def open_files(self):
         for i in self.files_dict.items():
+            sleep(1)
             with open(i[1], 'r', encoding='cp1251') as file:
                 self.get_volatility(file)
 
