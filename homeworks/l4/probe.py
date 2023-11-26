@@ -1,24 +1,46 @@
-input_str = [2, 4, 2, 6, 2, 8]
+import collections
+from math import  factorial
+def duplicate_encode(word):
+    list_count = collections.Counter(word.lower()).most_common()
+    result = []
+    for i in word.lower():
+        for y in range(0, len(list_count)):
 
-import math
-from fractions import Fraction
+            if i == list_count[y][0] and list_count[y][1] > 1:
+                result.append(')')
+                print('add')
+            elif i == list_count[y][0] and list_count[y][1] == 1:
+                result.append('(')
 
-def convert_fracts(lst):
-    denominators = []
-    numerators = []
-    fracts = {}
-    if isinstance(lst, str):
-        lst = lst.split(',')
+    return "".join(result)
 
-    for i in range(0, len(lst)):
-        if i % 2 != 0:
-            denominators.append(lst[i])
+# // ]]]21.11.2023
+
+prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61]
+def decomp(n):
+    arr = {}
+    fact_number = factorial(n)
+    if factorial(n) == 1:
+        return 1
+    for num in prime_numbers:
+        decomp_division(fact_number, num)
+
+
+
+def decomp_division(n, num):
+    i = 1
+    while True:
+        number = n / num
+        print(number)
+        if number % num != 0:
+            print('test')
+            break
+            return False
         else:
-            numerators.append(lst[i])
+            i += 1
+            continue
+    return i
 
-    fracts = dict(zip(numerators, denominators))
-    print(fracts)
+decomp(8)
 
-
-print(math.gcd(2,3,4))
-convert_fracts(input_str)
+print(5 % 2 != 0)
