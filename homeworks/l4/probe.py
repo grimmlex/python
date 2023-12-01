@@ -1,5 +1,7 @@
 import collections
-from math import  factorial
+from math import factorial
+
+
 def duplicate_encode(word):
     list_count = collections.Counter(word.lower()).most_common()
     result = []
@@ -14,9 +16,11 @@ def duplicate_encode(word):
 
     return "".join(result)
 
+
 # // ]]]21.11.2023
 
 from collections import defaultdict
+
 
 def dec(n):
     decompres = defaultdict(lambda: 0)
@@ -28,6 +32,7 @@ def dec(n):
         i += 1
     return decompres
 
+
 def decomp(n):
     answer = defaultdict(lambda: 0)
     for i in range(2, n + 1):
@@ -35,4 +40,13 @@ def decomp(n):
             answer[key] += value
     return ' * '.join(f'{x}^{y}' if y > 1 else str(x) for x, y in sorted(answer.items()))
 
-print(decomp(6))
+
+# /// 01.12.2023
+
+text0112 = "TTTT"
+
+
+def dna_to_rna(dna):
+    return "".join(["U" if i == "T" else i for i in dna])
+
+# #2
