@@ -1,5 +1,7 @@
 import collections
+from collections import defaultdict
 from math import factorial
+import re
 
 
 def duplicate_encode(word):
@@ -42,11 +44,63 @@ def decomp(n):
 
 
 # /// 01.12.2023
+def find_dna(dna):
+    return ["U" if i == "T" else i for i in dna]
 
-text0112 = "TTTT"
+
+# ???????????????2
+
+text01121 = "aretheyhere"
+text01122 = "yestheyarehere"
 
 
-def dna_to_rna(dna):
-    return "".join(["U" if i == "T" else i for i in dna])
+def longest(a1, a2):
+   return "".join(sorted(set.union(set(a1), set(a2))))
 
-# #2
+#  09/12/2023
+text091220231 = (1, 2, 3)
+
+
+def maps(a):
+    return [i * 2 for i in a]
+
+
+# ????????????????????
+
+def get_count(sentence):
+    return len([i for i in sentence if i in "aeiouAEIOU"])
+
+
+# ???????????????
+
+def bouncing_ball(h, bounce, window):
+    if h <= 0 or bounce >= 1 or bounce <= 0 or window >= h:
+        return -1
+    count = 1
+    jump_height = h * bounce
+    while jump_height > window:
+        jump_height *= bounce
+        count += 2
+    return count
+
+
+# 16/12/2023
+# 1
+def find_it(seq):
+    d = defaultdict(lambda: 0)
+    for i in seq:
+        d[i] += 1
+    return [key for key, value in d.items() if value % 2 != 0][0]
+
+
+# 2
+
+def validate_pin(pin):
+        return True if pin.isdecimal() and len(pin) in {4,6} else False
+
+
+# 20\12\2023
+def check_for_factor(base, factor):
+    return True if base % factor == 0 else False
+
+# 25.12.2023
